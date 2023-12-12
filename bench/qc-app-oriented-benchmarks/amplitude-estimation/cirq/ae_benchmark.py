@@ -161,7 +161,7 @@ def analyze_and_print_result(qc, result, num_counting_qubits, s_int, num_shots):
         counts_str["".join([str(x) for x in reversed(row)])] += 1
         
     counts = bitstring_to_a(counts_str, num_counting_qubits)
-    a = a_from_s_int(s_int, num_counting_qubits)
+    a = a_from_s_int(s_int, int(num_counting_qubits))
     
     if verbose: print(f"For amplitude {a} measured: {counts}")
     
@@ -194,7 +194,7 @@ def a_from_s_int(s_int, num_counting_qubits):
     theta = s_int * np.pi / (2**num_counting_qubits)
     precision = int(num_counting_qubits / (np.log2(10))) + 2
     a = round(np.sin(theta)**2, precision)
-    return a
+    return int(a)
 
 
 ################ Benchmark Loop
@@ -230,7 +230,7 @@ def run(min_qubits=3, max_qubits=8, max_circuits=3, num_shots=100,
     def execution_handler(qc, result, num_qubits, s_int, num_shots):
 
         # determine fidelity of result set
-        num_counting_qubits = int(num_qubits) - num_state_qubits - 1
+        num_counting_qubits = int(num_qubits) - int(num_state_qubits) - 1
         counts, fidelity = analyze_and_print_result(qc, result, num_counting_qubits, int(s_int), num_shots)
         metrics.store_metric(num_qubits, s_int, 'fidelity', fidelity)
 
